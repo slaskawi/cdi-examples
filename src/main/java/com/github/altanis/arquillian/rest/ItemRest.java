@@ -2,6 +2,7 @@ package com.github.altanis.arquillian.rest;
 
 import java.util.Collection;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import com.github.altanis.arquillian.core.cdi.ProperItemsRepository;
 import com.github.altanis.arquillian.core.items.Item;
 import com.github.altanis.arquillian.core.items.ItemsRepository;
 
@@ -28,7 +28,7 @@ public class ItemRest {
     public static final String ITEM_REST_PATH = "/items";
 
     @Inject
-    @ProperItemsRepository
+    @Any
     private ItemsRepository repository;
 
     @GET
