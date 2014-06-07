@@ -17,12 +17,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import com.github.altanis.arquillian.core.cdi.LoggingInterceptor;
 import com.github.altanis.arquillian.core.items.Item;
 import com.github.altanis.arquillian.core.items.ItemsRepository;
 
 @Path(ItemRest.ITEM_REST_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
+@LoggingInterceptor
 public class ItemRest {
 
     public static final String ITEM_REST_PATH = "/items";
@@ -33,6 +35,7 @@ public class ItemRest {
 
     @GET
     @Path("/")
+    @LoggingInterceptor
     public Collection<Item> getAllOrders() {
         return repository.getAllItems();
     }
@@ -44,7 +47,7 @@ public class ItemRest {
     }
 
     @POST
-    @Transactional
+    @Transactional()
     public Response createNew(@NotNull @Valid Item item, @Context UriInfo uriInfo) {
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri()).path("{id}");
         repository.addItem(item);
