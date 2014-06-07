@@ -2,6 +2,7 @@ package com.github.altanis.arquillian.rest;
 
 import java.util.Collection;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import com.github.altanis.arquillian.core.cdi.ItemCreatedEvent;
 import com.github.altanis.arquillian.core.cdi.LoggingInterceptor;
 import com.github.altanis.arquillian.core.items.Item;
 import com.github.altanis.arquillian.core.items.ItemsRepository;
@@ -28,6 +30,13 @@ import com.github.altanis.arquillian.core.items.ItemsRepository;
 public class ItemRest {
 
     public static final String ITEM_REST_PATH = "/items";
+
+    @Inject
+    Event<Item> allCreatedEvent;
+
+    @Inject
+    @ItemCreatedEvent
+    Event<Item> itemCreatedEvent;
 
     @Inject
     @Any
@@ -49,6 +58,8 @@ public class ItemRest {
     @POST
     @Transactional()
     public Response createNew(@NotNull @Valid Item item, @Context UriInfo uriInfo) {
+        itemCreatedEvent.fire(item);
+        allCreatedEvent.fire(item);
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri()).path("{id}");
         repository.addItem(item);
         return Response.created(uriBuilder.build(uriBuilder.build(item.getId()))).build();
