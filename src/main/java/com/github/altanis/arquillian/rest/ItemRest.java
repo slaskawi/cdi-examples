@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import com.github.altanis.arquillian.core.cdi.ProperItemsRepository;
 import com.github.altanis.arquillian.core.items.Item;
 import com.github.altanis.arquillian.core.items.ItemsRepository;
 
@@ -27,6 +28,7 @@ public class ItemRest {
     public static final String ITEM_REST_PATH = "/items";
 
     @Inject
+    @ProperItemsRepository
     private ItemsRepository repository;
 
     @GET
